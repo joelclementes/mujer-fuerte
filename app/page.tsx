@@ -1,5 +1,8 @@
 import { supabase } from '@/lib/supabase';
 
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   const { data: avisos } = await supabase
     .from('avisos')
