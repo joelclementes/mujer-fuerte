@@ -17,6 +17,12 @@ export default function AdminPage() {
   const [archivo, setArchivo] = useState<File | null>(null);
   const [cargando, setCargando] = useState(false);
 
+  const [avisoEditando, setAvisoEditando] = useState<any | null>(null);
+  const [tituloEditando, setTituloEditando] = useState("");
+  const [mensajeEditando, setMensajeEditando] = useState("");
+  const [editorEditarKey, setEditorEditarKey] = useState(0);
+  const [guardandoEdicion, setGuardandoEdicion] = useState(false);
+
   const [notificacion, setNotificacion] = useState<{
     tipo: TipoNotificacion;
     mensaje: string;
@@ -100,7 +106,6 @@ export default function AdminPage() {
       setTitulo("");
       setMensaje("");
       setArchivo(null);
-
       setEditorKey((prev) => prev + 1);
 
       await cargarAvisos();
@@ -109,6 +114,46 @@ export default function AdminPage() {
     }
 
     setCargando(false);
+  }
+
+  function abrirEditorAviso(aviso: any) {
+    setAvisoEditando(aviso);
+    setTituloEditando(aviso.titulo ?? "");
+    setMensajeEditando(aviso.mensaje ?? "");
+    setEditorEditarKey((prev) => prev + 1);
+  }
+
+  function cancelarEdicion() {
+    setAvisoEditando(null);
+    setTituloEditando("");
+    setMensajeEditando("");
+    setEditorEditarKey((prev) => prev + 1);
+  }
+
+  async function guardarEdicionAviso(e: React.FormEvent) {
+    e.preventDefault();
+
+    if (!avisoEditando) return;
+
+    setGuardandoEdicion(true);
+
+    const { error } = await supabase
+      .from("avisos")
+      .update({
+        titulo: tituloEditando,
+        mensaje: mensajeEditando,
+      })
+      .eq("id", avisoEditando.id);
+
+    if (error) {
+      mostrarNotificacion("error", "No se pudo actualizar el aviso.");
+    } else {
+      await cargarAvisos();
+      cancelarEdicion();
+      mostrarNotificacion("exito", "Aviso actualizado correctamente.");
+    }
+
+    setGuardandoEdicion(false);
   }
 
   async function confirmarEliminarAviso() {
@@ -155,6 +200,61 @@ export default function AdminPage() {
             }`}
           >
             {notificacion.mensaje}
+          </div>
+        </div>
+      )}
+
+      {avisoEditando && (
+        <div className="fixed inset-0 z-50 overflow-y-auto bg-black/40 px-4 py-6">
+          <div className="mx-auto w-full max-w-2xl rounded-[2rem] bg-white p-5 shadow-xl">
+            <h2 className="text-2xl font-black text-stone-900">
+              Modificar aviso
+            </h2>
+
+            <p className="mt-1 text-stone-600">
+              Cambia el título o el mensaje del aviso seleccionado.
+            </p>
+
+            <form onSubmit={guardarEdicionAviso} className="mt-5 space-y-4">
+              <input
+                required
+                placeholder="Título del aviso"
+                className="w-full rounded-2xl border border-amber-200 bg-amber-50/40 p-4 text-lg outline-none transition focus:border-amber-500 focus:bg-white"
+                value={tituloEditando}
+                onChange={(e) => setTituloEditando(e.target.value)}
+              />
+
+              <div>
+                <p className="mb-2 text-sm font-bold text-stone-700">
+                  Mensaje para las hermanas
+                </p>
+
+                <EditorMensaje
+                  key={editorEditarKey}
+                  value={mensajeEditando}
+                  onChange={setMensajeEditando}
+                />
+              </div>
+
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <button
+                  type="button"
+                  onClick={cancelarEdicion}
+                  disabled={guardandoEdicion}
+                  className="rounded-2xl bg-stone-100 px-5 py-4 font-bold text-stone-700 transition hover:bg-stone-200 disabled:opacity-60"
+                >
+                  Cancelar
+                </button>
+
+                <button
+                  type="submit"
+                  disabled={guardandoEdicion}
+                  className="rounded-2xl bg-amber-700 px-5 py-4 font-bold text-white transition hover:bg-amber-800 disabled:opacity-60"
+                >
+                  {guardandoEdicion ? "Guardando..." : "Guardar cambios"}
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       )}
@@ -352,12 +452,21 @@ export default function AdminPage() {
                   </a>
                 )}
 
-                <button
-                  onClick={() => setAvisoAEliminar(aviso)}
-                  className="mt-4 w-full rounded-2xl border border-red-200 bg-red-50 py-3 font-bold text-red-700 transition hover:bg-red-100"
-                >
-                  Eliminar aviso
-                </button>
+                <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <button
+                    onClick={() => abrirEditorAviso(aviso)}
+                    className="w-full rounded-2xl border border-amber-200 bg-amber-50 py-3 font-bold text-amber-800 transition hover:bg-amber-100"
+                  >
+                    Modificar aviso
+                  </button>
+
+                  <button
+                    onClick={() => setAvisoAEliminar(aviso)}
+                    className="w-full rounded-2xl border border-red-200 bg-red-50 py-3 font-bold text-red-700 transition hover:bg-red-100"
+                  >
+                    Eliminar aviso
+                  </button>
+                </div>
               </article>
             );
           })}

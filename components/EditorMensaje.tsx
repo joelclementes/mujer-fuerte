@@ -17,7 +17,7 @@ export default function EditorMensaje({ value, onChange }: EditorMensajeProps) {
     editorProps: {
       attributes: {
         class:
-          "min-h-40 rounded-b-2xl border-x border-b border-amber-200 bg-amber-50/40 p-4 text-lg leading-relaxed text-stone-800 outline-none focus:bg-white",
+  "min-h-40 rounded-b-2xl border-x border-b border-amber-200 bg-amber-50/40 p-4 text-lg leading-relaxed text-stone-800 outline-none focus:bg-white [&_ul]:list-disc [&_ul]:space-y-1 [&_ul]:pl-6 [&_ol]:list-decimal [&_ol]:space-y-1 [&_ol]:pl-6 [&_li]:pl-1",
       },
     },
     onUpdate({ editor }) {
