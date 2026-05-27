@@ -46,7 +46,7 @@ export default function HomePage() {
       )}
 
       <section className="mx-auto max-w-2xl">
-        <header className="mb-5 rounded-[2rem] bg-gradient-to-br from-amber-100 to-white p-4 shadow-sm ring-1 ring-amber-200">
+        <header className="mb-5 rounded-[1rem] bg-gradient-to-br from-amber-100 to-white p-4 shadow-sm ring-1 ring-amber-200">
           <div className="flex items-center gap-2">
             <div className="flex-shrink-0">
               <img
@@ -97,12 +97,12 @@ export default function HomePage() {
             return (
               <article
                 key={aviso.id}
-                className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-amber-100"
+                className="overflow-hidden rounded-[1rem] bg-white shadow-sm ring-1 ring-amber-100"
               >
                 <div className="p-5">
-                  <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                  {/* <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                     Aviso
-                  </div>
+                  </div> */}
 
                   <h2 className="text-2xl font-bold leading-tight text-stone-900">
                     {aviso.titulo}
@@ -157,12 +157,12 @@ export default function HomePage() {
         </div>
 
         <footer className="mt-8 text-center">
-          <a
+          {/* <a
             href="/login"
             className="text-sm font-semibold text-amber-700 underline underline-offset-4"
           >
             Administración
-          </a>
+          </a> */}
         </footer>
       </section>
     </main>
