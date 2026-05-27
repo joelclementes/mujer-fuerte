@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 import { useRouter } from "next/navigation";
+import EditorMensaje from "@/components/EditorMensaje";
 
 type TipoNotificacion = "exito" | "error";
 
@@ -12,6 +13,7 @@ export default function AdminPage() {
   const [avisos, setAvisos] = useState<any[]>([]);
   const [titulo, setTitulo] = useState("");
   const [mensaje, setMensaje] = useState("");
+  const [editorKey, setEditorKey] = useState(0);
   const [archivo, setArchivo] = useState<File | null>(null);
   const [cargando, setCargando] = useState(false);
 
@@ -98,7 +100,11 @@ export default function AdminPage() {
       setTitulo("");
       setMensaje("");
       setArchivo(null);
+
+      setEditorKey((prev) => prev + 1);
+
       await cargarAvisos();
+
       mostrarNotificacion("exito", "Aviso publicado correctamente.");
     }
 
@@ -111,7 +117,9 @@ export default function AdminPage() {
     setEliminando(true);
 
     if (avisoAEliminar.archivo_path) {
-      await supabase.storage.from("avisos").remove([avisoAEliminar.archivo_path]);
+      await supabase.storage
+        .from("avisos")
+        .remove([avisoAEliminar.archivo_path]);
     }
 
     const { error } = await supabase
@@ -206,14 +214,6 @@ export default function AdminPage() {
             </div>
 
             <div className="min-w-0 flex-1">
-              {/* <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
-                Sociedad Femenil
-              </p>
-
-              <h1 className="mt-1 text-3xl font-black leading-none tracking-tight text-stone-900">
-                Mujer Fuerte
-              </h1> */}
-
               <p className="mt-2 text-lg leading-snug text-stone-600">
                 Avisos, documentos y comunicados importantes.
               </p>
@@ -252,13 +252,17 @@ export default function AdminPage() {
             onChange={(e) => setTitulo(e.target.value)}
           />
 
-          <textarea
-            placeholder="Mensaje para las hermanas"
-            rows={5}
-            className="w-full rounded-2xl border border-amber-200 bg-amber-50/40 p-4 text-lg outline-none transition focus:border-amber-500 focus:bg-white"
-            value={mensaje}
-            onChange={(e) => setMensaje(e.target.value)}
-          />
+          <div>
+            <p className="mb-2 text-sm font-bold text-stone-700">
+              Mensaje para las hermanas
+            </p>
+
+            <EditorMensaje
+              key={editorKey}
+              value={mensaje}
+              onChange={setMensaje}
+            />
+          </div>
 
           <label className="block rounded-2xl border border-dashed border-amber-300 bg-amber-50/60 p-4">
             <span className="block text-lg font-bold text-stone-800">
@@ -332,9 +336,10 @@ export default function AdminPage() {
                 </p>
 
                 {aviso.mensaje && (
-                  <p className="mt-3 whitespace-pre-line text-stone-700">
-                    {aviso.mensaje}
-                  </p>
+                  <div
+                    className="mt-3 space-y-2 text-stone-700 [&_em]:italic [&_li]:ml-5 [&_li]:list-disc [&_p]:leading-relaxed [&_strong]:font-bold [&_u]:underline [&_ul]:space-y-1"
+                    dangerouslySetInnerHTML={{ __html: aviso.mensaje }}
+                  />
                 )}
 
                 {aviso.archivo_url && (

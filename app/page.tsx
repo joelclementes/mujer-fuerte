@@ -28,14 +28,6 @@ export default async function HomePage() {
             </div>
 
             <div className="min-w-0 flex-1">
-              {/* <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
-                Sociedad Femenil
-              </p>
-
-              <h1 className="mt-1 text-3xl font-black leading-none tracking-tight text-stone-900">
-                Mujer Fuerte
-              </h1> */}
-
               <p className="mt-2 text-lg leading-snug text-stone-600">
                 Avisos, documentos y comunicados importantes.
               </p>
@@ -79,9 +71,9 @@ export default async function HomePage() {
                 className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-amber-100"
               >
                 <div className="p-5">
-                  <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                  {/* <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                     Aviso
-                  </div>
+                  </div> */}
 
                   <h2 className="text-2xl font-bold leading-tight text-stone-900">
                     {aviso.titulo}
@@ -92,9 +84,10 @@ export default async function HomePage() {
                   </p>
 
                   {aviso.mensaje && (
-                    <p className="mt-4 whitespace-pre-line text-lg leading-relaxed text-stone-700">
-                      {aviso.mensaje}
-                    </p>
+                    <div
+                      className="mt-4 space-y-2 text-lg leading-relaxed text-stone-700 [&_em]:italic [&_li]:ml-5 [&_li]:list-disc [&_p]:leading-relaxed [&_strong]:font-bold [&_u]:underline [&_ul]:space-y-1"
+                      dangerouslySetInnerHTML={{ __html: aviso.mensaje }}
+                    />
                   )}
 
                   {esImagen && aviso.archivo_url && (
@@ -123,12 +116,15 @@ export default async function HomePage() {
         </div>
 
         <footer className="mt-8 text-center">
-          <a
-            href="/login"
-            className="text-sm font-semibold text-amber-700 underline underline-offset-4"
-          >
-            Administración
-          </a>
+          {/* <a
+              href="/login"
+              className="text-sm font-semibold text-amber-700 underline underline-offset-4"
+            >
+              Administración
+            </a> */}
+          <i className="text-sm text-stone-500 rounded-full">
+            "Porque separados de mí nada podéis hacer. Juan 15:5b"
+          </i>
         </footer>
       </section>
     </main>
