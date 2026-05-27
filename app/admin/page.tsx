@@ -156,6 +156,35 @@ export default function AdminPage() {
     setGuardandoEdicion(false);
   }
 
+  async function cambiarEstadoPublicado(aviso: any) {
+    const nuevoEstado = !aviso.publicado;
+
+    const { error } = await supabase
+      .from("avisos")
+      .update({
+        publicado: nuevoEstado,
+      })
+      .eq("id", aviso.id);
+
+    if (error) {
+      mostrarNotificacion("error", "No se pudo cambiar el estado del aviso.");
+      return;
+    }
+
+    setAvisos((prevAvisos) =>
+      prevAvisos.map((item) =>
+        item.id === aviso.id ? { ...item, publicado: nuevoEstado } : item,
+      ),
+    );
+
+    mostrarNotificacion(
+      "exito",
+      nuevoEstado
+        ? "El aviso ahora está visible para las hermanas."
+        : "El aviso fue ocultado del visor público.",
+    );
+  }
+
   async function confirmarEliminarAviso() {
     if (!avisoAEliminar) return;
 
@@ -423,8 +452,18 @@ export default function AdminPage() {
                 key={aviso.id}
                 className="rounded-[2rem] bg-white p-5 shadow-sm ring-1 ring-amber-100"
               >
-                <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                {/* <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                   Publicado
+                </div> */}
+
+                <div
+                  className={`mb-3 inline-flex rounded-full px-3 py-1 text-sm font-semibold ${
+                    aviso.publicado
+                      ? "bg-green-50 text-green-700 ring-1 ring-green-200"
+                      : "bg-stone-100 text-stone-600 ring-1 ring-stone-200"
+                  }`}
+                >
+                  {aviso.publicado ? "Publicado" : "Oculto"}
                 </div>
 
                 <h3 className="text-xl font-bold text-stone-900">
@@ -451,6 +490,37 @@ export default function AdminPage() {
                     Ver archivo adjunto
                   </a>
                 )}
+
+                <div className="mt-4 rounded-2xl bg-stone-50 p-4 ring-1 ring-stone-100">
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <p className="font-bold text-stone-900">
+                        Mostrar en avisos
+                      </p>
+                      <p className="text-sm text-stone-600">
+                        {aviso.publicado
+                          ? "Este aviso está visible para las hermanas."
+                          : "Este aviso está oculto en el visor público."}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => cambiarEstadoPublicado(aviso)}
+                      className={`relative inline-flex h-8 w-14 flex-shrink-0 rounded-full transition ${
+                        aviso.publicado ? "bg-amber-700" : "bg-stone-300"
+                      }`}
+                      aria-pressed={aviso.publicado}
+                      aria-label="Cambiar visibilidad del aviso"
+                    >
+                      <span
+                        className={`absolute top-1 h-6 w-6 rounded-full bg-white shadow transition ${
+                          aviso.publicado ? "left-7" : "left-1"
+                        }`}
+                      />
+                    </button>
+                  </div>
+                </div>
 
                 <div className="mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <button
