@@ -17,74 +17,30 @@ export default async function HomePage() {
   return (
     <main className="min-h-screen bg-amber-50 px-4 py-6 text-stone-900">
       <section className="mx-auto max-w-2xl">
-        {/* <header className="mb-6 rounded-[2rem] bg-gradient-to-br from-amber-100 to-white p-6 text-center shadow-sm ring-1 ring-amber-200">
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-amber-700">
-            Sociedad Femenil
-          </p>
-
-          <h1 className="text-4xl font-black tracking-tight text-stone-900">
-            Mujer Fuerte
-          </h1>
-
-          <p className="mt-3 text-base leading-relaxed text-stone-600">
-            Avisos, documentos y comunicados importantes.
-          </p>
-        </header> */}
-        {/* <header className="mb-6 rounded-[2rem] bg-gradient-to-br from-amber-100 to-white p-6 text-center shadow-sm ring-1 ring-amber-200">
-          <div className="mb-5 flex justify-center">
-            <img
-              src="/logo_sin_fondo.png"
-              alt="Mujer Fuerte"
-              className="h-24 w-24 object-contain"
-            />
-          </div>
-
-          <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-amber-700">
-            Sociedad Femenil
-          </p>
-
-          <h1 className="text-4xl font-black tracking-tight text-stone-900">
-            Mujer Fuerte
-          </h1>
-
-          <p className="mt-3 text-base leading-relaxed text-stone-600">
-            Avisos, documentos y comunicados importantes.
-          </p>
-        </header> */}
-
         <header className="mb-5 rounded-[2rem] bg-gradient-to-br from-amber-100 to-white p-4 shadow-sm ring-1 ring-amber-200">
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2">
             <div className="flex-shrink-0">
               <img
                 src="/logo_sin_fondo.png"
                 alt="Mujer Fuerte"
-                className="h-30 w-30 object-contain"
+                className="h-40 w-40 object-contain"
               />
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
+              {/* <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
                 Sociedad Femenil
               </p>
 
               <h1 className="mt-1 text-3xl font-black leading-none tracking-tight text-stone-900">
                 Mujer Fuerte
-              </h1>
+              </h1> */}
 
-              <p className="mt-2 text-sm leading-snug text-stone-600">
+              <p className="mt-2 text-lg leading-snug text-stone-600">
                 Avisos, documentos y comunicados importantes.
               </p>
             </div>
           </div>
-
-          {/* <div className="mt-4 flex justify-end">
-    <button
-      onClick={cerrarSesion}
-      className="rounded-2xl bg-white px-4 py-3 font-bold text-stone-700 shadow-sm ring-1 ring-amber-200 transition hover:bg-amber-50"
-    >
-      Cerrar sesión
-    </button>
-  </div> */}
         </header>
 
         <div className="space-y-5">

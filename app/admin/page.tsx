@@ -201,20 +201,20 @@ export default function AdminPage() {
               <img
                 src="/logo_sin_fondo.png"
                 alt="Mujer Fuerte"
-                className="h-30 w-30 object-contain"
+                className="h-40 w-40 object-contain"
               />
             </div>
 
             <div className="min-w-0 flex-1">
-              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
+              {/* <p className="text-xs font-semibold uppercase tracking-[0.18em] text-amber-700">
                 Sociedad Femenil
               </p>
 
               <h1 className="mt-1 text-3xl font-black leading-none tracking-tight text-stone-900">
                 Mujer Fuerte
-              </h1>
+              </h1> */}
 
-              <p className="mt-2 text-sm leading-snug text-stone-600">
+              <p className="mt-2 text-lg leading-snug text-stone-600">
                 Avisos, documentos y comunicados importantes.
               </p>
             </div>
