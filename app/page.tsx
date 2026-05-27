@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { supabase } from "@/lib/supabase";
 
 export const dynamic = "force-dynamic";
@@ -92,11 +93,30 @@ export default async function HomePage() {
 
                   {esImagen && aviso.archivo_url && (
                     <div className="mt-5 overflow-hidden rounded-2xl bg-amber-50">
-                      <img
+                      <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-amber-50 sm:h-96">
+                        <Image
+                          src={aviso.archivo_url}
+                          alt={aviso.titulo}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 672px"
+                          className="object-cover"
+                          loading="eager"
+                          priority
+                        />
+                        {/* <Image
+                          src={aviso.archivo_url}
+                          alt={aviso.titulo}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 672px"
+                          className="object-cover"
+                          priority={false}
+                        /> */}
+                      </div>
+                      {/* <img
                         src={aviso.archivo_url}
                         alt={aviso.titulo}
                         className="w-full object-cover"
-                      />
+                      /> */}
                     </div>
                   )}
 

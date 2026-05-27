@@ -15,7 +15,17 @@ export default function AdminPage() {
   const [mensaje, setMensaje] = useState("");
   const [editorKey, setEditorKey] = useState(0);
   const [archivo, setArchivo] = useState<File | null>(null);
+  const [nombreArchivo, setNombreArchivo] = useState("");
   const [cargando, setCargando] = useState(false);
+
+  const TAMANO_MAXIMO_ARCHIVO = 2 * 1024 * 1024;
+
+  const tiposPermitidos = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "application/pdf",
+  ];
 
   const [avisoEditando, setAvisoEditando] = useState<any | null>(null);
   const [tituloEditando, setTituloEditando] = useState("");
@@ -106,6 +116,7 @@ export default function AdminPage() {
       setTitulo("");
       setMensaje("");
       setArchivo(null);
+      setNombreArchivo("");
       setEditorKey((prev) => prev + 1);
 
       await cargarAvisos();
@@ -402,12 +413,106 @@ export default function AdminPage() {
               Opcional. Puedes subir una imagen o un documento PDF.
             </span>
 
-            <input
+            <div className="mt-4">
+              <label
+                htmlFor="archivo"
+                className="flex cursor-pointer items-center justify-center rounded-2xl bg-amber-700 px-5 py-4 text-center font-bold text-white shadow-sm transition hover:bg-amber-800"
+              >
+                Seleccionar archivo
+              </label>
+
+              <input
+                id="archivo"
+                key={nombreArchivo === "" ? "vacio" : nombreArchivo}
+                type="file"
+                accept=".jpg,.jpeg,.png,.webp,.pdf"
+                className="hidden"
+                onChange={(e) => {
+                  const archivoSeleccionado = e.target.files?.[0] ?? null;
+
+                  if (!archivoSeleccionado) {
+                    setArchivo(null);
+                    setNombreArchivo("");
+                    return;
+                  }
+
+                  if (!tiposPermitidos.includes(archivoSeleccionado.type)) {
+                    mostrarNotificacion(
+                      "error",
+                      "Solo se permiten imágenes JPG, PNG, WebP o documentos PDF.",
+                    );
+
+                    e.target.value = "";
+
+                    setArchivo(null);
+                    setNombreArchivo("");
+
+                    return;
+                  }
+
+                  if (archivoSeleccionado.size > TAMANO_MAXIMO_ARCHIVO) {
+                    mostrarNotificacion(
+                      "error",
+                      "El archivo no debe pesar más de 2 MB.",
+                    );
+
+                    e.target.value = "";
+
+                    setArchivo(null);
+                    setNombreArchivo("");
+
+                    return;
+                  }
+
+                  setArchivo(archivoSeleccionado);
+                  setNombreArchivo(archivoSeleccionado.name);
+                }}
+              />
+
+              <p
+                className={`mt-3 text-sm font-semibold ${
+                  nombreArchivo ? "text-amber-700" : "text-stone-500"
+                }`}
+              >
+                {nombreArchivo || "Ningún archivo seleccionado"}
+              </p>
+            </div>
+
+            {/* <input
               type="file"
-              accept="image/*,.pdf"
+              accept=".jpg,.jpeg,.png,.webp,.pdf"
               className="mt-4 w-full text-sm"
-              onChange={(e) => setArchivo(e.target.files?.[0] ?? null)}
-            />
+              onChange={(e) => {
+                const archivoSeleccionado = e.target.files?.[0] ?? null;
+
+                if (!archivoSeleccionado) {
+                  setArchivo(null);
+                  return;
+                }
+
+                if (!tiposPermitidos.includes(archivoSeleccionado.type)) {
+                  mostrarNotificacion(
+                    "error",
+                    "Solo se permiten imágenes JPG, PNG, WebP o documentos PDF.",
+                  );
+                  e.target.value = "";
+                  setArchivo(null);
+                  return;
+                }
+
+                if (archivoSeleccionado.size > TAMANO_MAXIMO_ARCHIVO) {
+                  mostrarNotificacion(
+                    "error",
+                    "El archivo no debe pesar más de 2 MB.",
+                  );
+                  e.target.value = "";
+                  setArchivo(null);
+                  return;
+                }
+
+                setArchivo(archivoSeleccionado);
+              }}
+            /> */}
           </label>
 
           <button
