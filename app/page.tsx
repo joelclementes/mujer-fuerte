@@ -1,22 +1,50 @@
+"use client";
+
 import Image from "next/image";
+import { useEffect, useState } from "react";
 import { supabase } from "@/lib/supabase";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+export default function HomePage() {
+  const [avisos, setAvisos] = useState<any[]>([]);
+  const [imagenAbierta, setImagenAbierta] = useState<string | null>(null);
 
-export default async function HomePage() {
-  const { data: avisos, error } = await supabase
-    .from("avisos")
-    .select("*")
-    .eq("publicado", true)
-    .order("created_at", { ascending: false });
+  useEffect(() => {
+    cargarAvisos();
+  }, []);
 
-  if (error) {
-    console.error("Error cargando avisos:", error);
+  async function cargarAvisos() {
+    const { data } = await supabase
+      .from("avisos")
+      .select("*")
+      .eq("publicado", true)
+      .order("created_at", { ascending: false });
+
+    setAvisos(data ?? []);
   }
 
   return (
     <main className="min-h-screen bg-amber-50 px-4 py-6 text-stone-900">
+      {imagenAbierta && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/90 p-4"
+          onClick={() => setImagenAbierta(null)}
+        >
+          <button
+            type="button"
+            onClick={() => setImagenAbierta(null)}
+            className="absolute right-4 top-4 rounded-full bg-white/90 px-4 py-2 text-sm font-bold text-stone-900"
+          >
+            Cerrar
+          </button>
+
+          <img
+            src={imagenAbierta}
+            alt="Imagen del aviso"
+            className="max-h-[85vh] max-w-full object-contain"
+          />
+        </div>
+      )}
+
       <section className="mx-auto max-w-2xl">
         <header className="mb-5 rounded-[2rem] bg-gradient-to-br from-amber-100 to-white p-4 shadow-sm ring-1 ring-amber-200">
           <div className="flex items-center gap-2">
@@ -36,7 +64,7 @@ export default async function HomePage() {
           </div>
         </header>
 
-        <div className="space-y-5">
+ <div className="space-y-5">
           {!avisos?.length && (
             <div className="rounded-[2rem] bg-white p-8 text-center shadow-sm ring-1 ring-amber-100">
               <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-100 text-3xl">
@@ -72,9 +100,9 @@ export default async function HomePage() {
                 className="overflow-hidden rounded-[2rem] bg-white shadow-sm ring-1 ring-amber-100"
               >
                 <div className="p-5">
-                  {/* <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
+                  <div className="mb-3 inline-flex rounded-full bg-amber-100 px-3 py-1 text-sm font-semibold text-amber-800">
                     Aviso
-                  </div> */}
+                  </div>
 
                   <h2 className="text-2xl font-bold leading-tight text-stone-900">
                     {aviso.titulo}
@@ -92,7 +120,11 @@ export default async function HomePage() {
                   )}
 
                   {esImagen && aviso.archivo_url && (
-                    <div className="mt-5 overflow-hidden rounded-2xl bg-amber-50">
+                    <button
+                      type="button"
+                      onClick={() => setImagenAbierta(aviso.archivo_url)}
+                      className="mt-5 block w-full overflow-hidden rounded-2xl bg-amber-50 text-left"
+                    >
                       <div className="relative h-72 w-full overflow-hidden rounded-2xl bg-amber-50 sm:h-96">
                         <Image
                           src={aviso.archivo_url}
@@ -100,24 +132,13 @@ export default async function HomePage() {
                           fill
                           sizes="(max-width: 768px) 100vw, 672px"
                           className="object-cover"
-                          loading="eager"
-                          priority
                         />
-                        {/* <Image
-                          src={aviso.archivo_url}
-                          alt={aviso.titulo}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 672px"
-                          className="object-cover"
-                          priority={false}
-                        /> */}
                       </div>
-                      {/* <img
-                        src={aviso.archivo_url}
-                        alt={aviso.titulo}
-                        className="w-full object-cover"
-                      /> */}
-                    </div>
+
+                      <p className="px-4 py-3 text-center text-sm font-bold text-amber-800">
+                        Tocar para ver imagen completa
+                      </p>
+                    </button>
                   )}
 
                   {esPdf && aviso.archivo_url && (
@@ -136,15 +157,12 @@ export default async function HomePage() {
         </div>
 
         <footer className="mt-8 text-center">
-          {/* <a
-              href="/login"
-              className="text-sm font-semibold text-amber-700 underline underline-offset-4"
-            >
-              Administración
-            </a> */}
-          <i className="text-sm text-stone-500 rounded-full">
-            "Porque separados de mí nada podéis hacer. Juan 15:5b"
-          </i>
+          <a
+            href="/login"
+            className="text-sm font-semibold text-amber-700 underline underline-offset-4"
+          >
+            Administración
+          </a>
         </footer>
       </section>
     </main>
